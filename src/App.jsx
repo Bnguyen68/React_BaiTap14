@@ -1,27 +1,18 @@
-import { useState, useEffect } from 'react';
-import { fetchBooks } from './Api';
-import BookCreate from './components/BookCreate';
-import BookList from './components/BookList';
+import { BookProvider } from "./context/BookContext";
+import BookList from "./components/BookList";
+import BookCreate from "./components/BookCreate";
+import "./App.css";
 
-const App = () => {
-  const [books, setBooks] = useState([]);
-
-  // Lấy danh sách sách từ API khi component mount
-  useEffect(() => {
-    const loadBooks = async () => {
-      const data = await fetchBooks();
-      setBooks(data);
-    };
-    loadBooks();
-  }, []);
-
+function App() {
   return (
-    <div className="app-container">
-      <h1>Book CRUD App</h1>
-      <BookCreate books={books} setBooks={setBooks} />
-      <BookList books={books} setBooks={setBooks} />
-    </div>
+    <BookProvider>
+      <div className="app">
+        <h1>Reading List</h1>
+        <BookList />
+        <BookCreate />
+      </div>
+    </BookProvider>
   );
-};
+}
 
 export default App;

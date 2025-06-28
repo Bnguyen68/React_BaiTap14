@@ -1,52 +1,32 @@
-import { useState } from 'react';
-import BookEdit from './BookEdit';
-import { deleteBook } from '../Api';
+import { useState } from "react";
+import BookEdit from "./BookEdit";
+import { useBooks } from "../hooks/useBooks";
 
-const BookShow = ({ book, setBooks }) => {
+function BookShow({ book }) {
   const [showEdit, setShowEdit] = useState(false);
+  const { removeBook, updateBook } = useBooks();
 
-  const handleDeleteBook = async () => {
-    await deleteBook(book.id);
-    setBooks(prevBooks => prevBooks.filter(b => b.id !== book.id));
-  };
-
-  const onEdit = (id, title) => {
-    setBooks(prevBooks => prevBooks.map(b => b.id === id ? { ...b, title } : b));
+  const handleDelete = () => removeBook(book.id);
+  const handleEditClick = () => setShowEdit(true);
+  const handleSubmit = (id, newTitle) => {
+    updateBook(id, newTitle);
     setShowEdit(false);
   };
 
-  const imageUrl = `https://picsum.photos/seed/${book.id}/150/150`;
-  const fallbackUrl = 'https://via.placeholder.com/150x150.png?text=Image+Not+Found';
-
   return (
-    <div className="book-show">
-      <img
-        src={imageUrl}
-        alt="Book cover"
-        className="book-image"
-        onError={(e) => {
-          e.target.src = fallbackUrl;
-        }}
-      />
-      <div className="book-content">
-        {showEdit ? (
-          <BookEdit book={book} onEdit={onEdit} setShowEdit={setShowEdit} />
-        ) : (
-          <div>
-            <h3>{book.title}</h3>
-            <div className="button-group">
-              <button onClick={() => setShowEdit(true)} className="edit-button">
-                Edit
-              </button>
-              <button onClick={handleDeleteBook} className="delete-button">
-                Delete
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
+    <div className="book-item">
+      <img src={`https://picsum.photos/seed/${book.id}/200`} alt="book" />
+      {showEdit ? (
+        <BookEdit book={book} onSubmit={handleSubmit} />
+      ) : (
+        <>
+          <h3>{book.title}</h3>
+          <button onClick={handleEditClick}>✏️</button>
+          <button onClick={handleDelete}>❌</button>
+        </>
+      )}
     </div>
   );
-};
+}
 
 export default BookShow;

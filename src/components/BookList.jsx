@@ -1,16 +1,16 @@
-import BookShow from './BookShow';
+import BookShow from "./BookShow";
+import { useBooks } from "../hooks/useBooks";
 
-const BookList = ({ books, setBooks }) => {
+function BookList() {
+  const { books } = useBooks();
+
   return (
     <div className="book-list">
-      <h2>Book List</h2>
-      <div className="book-grid">
-        {books.map(book => (
-          <BookShow key={book.id} book={book} setBooks={setBooks} />
-        ))}
-      </div>
+      {books.map((book) => (
+        <BookShow key={book.id} book={book} />
+      ))}
     </div>
   );
-};
+}
 
 export default BookList;

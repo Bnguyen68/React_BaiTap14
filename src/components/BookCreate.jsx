@@ -1,35 +1,25 @@
-import { useState } from 'react';
-import { addBook } from '../Api';
+import { useState } from "react";
+import { useBooks } from "../hooks/useBooks";
 
-const BookCreate = ({ books, setBooks }) => {
-  const [title, setTitle] = useState('');
+function BookCreate() {
+  const [title, setTitle] = useState("");
+  const { addBook } = useBooks();
 
-  const handleAddBook = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (title.trim()) {
-      const newBook = await addBook(title);
-      setBooks([...books, newBook]);
-      setTitle('');
+      addBook(title);
+      setTitle("");
     }
   };
 
   return (
-    <div className="book-create">
-      <h2>Add New Book</h2>
-      <div className="form-group">
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Enter book title"
-          className="input-field"
-        />
-        <button onClick={handleAddBook} className="add-button">
-          Add Book
-        </button>
-      </div>
-    </div>
+    <form onSubmit={handleSubmit}>
+      <label>Title</label>
+      <input value={title} onChange={(e) => setTitle(e.target.value)} />
+      <button>Submit</button>
+    </form>
   );
-};
+}
 
 export default BookCreate;
